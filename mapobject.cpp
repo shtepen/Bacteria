@@ -32,7 +32,7 @@ evol::Vector MapObject::get_position() {
  * @brief MapObject::get_radius -- возвращает линейный размер объекта
  * @return линейный размер объекта (радиус круглого объекта)
  */
-double MapObject::get_radius() {
+double MapObject::get_radius() const {
     return radius;
 }
 
@@ -40,7 +40,7 @@ double MapObject::get_radius() {
  * @brief MapObject::get_angle -- возвращает направление движения
  * @return направление движения объекта в радианах
  */
-double MapObject::get_angle() {
+double MapObject::get_angle() const {
     return angle;
 }
 
@@ -58,6 +58,23 @@ void MapObject::setBoundaryFlag(evol::Vector curr_pos, evol::Vector tl_b, evol::
         boundary_flag = -1;
     else boundary_flag = 0;
 }
+
+/**
+ * @brief Bacteria::reflect -- изменяет угол на угол отражения при переходе за границу среды
+ * @param b_f -- флаг, равный нулю, если бактерия внутри среды, 1 -- при переходе за одну из
+ *               горизонтальных границ или -1 при переходе за одну из вертикальных границ
+ */
+void MapObject::reflect(int b_f) {
+    if (b_f == 1)                          //reflect from horizontal boundaries
+        angle = 2 * M_PI - angle;
+    else {                                 //reflect from vertical boundaries
+        if (angle <= M_PI)
+            angle = M_PI - angle;
+        else
+            angle = 3 * M_PI - angle;
+    }
+}
+
 
 /**
  * @brief MapObject::brownian_motion -- реализация броуновского движения объектов

@@ -20,16 +20,15 @@ public:
 //    static void set_boundaries(const Environment& world); /** Сопоставляет характеристики мира (координаты) данным созданиям */
 
     evol::Vector get_position(); /** Возвращает текущее положение объекта */
-    double get_radius(); /** Возвращает линейный размер объекта */
-    double get_angle(); /** Возвращает направление движения объекта в радианах */
+    double get_radius() const; /** Возвращает линейный размер объекта */
+    double get_angle() const; /** Возвращает направление движения объекта в радианах */
+    void reflect(int b_f); /** Изменяет направление движения при отражении от границ */
 
     virtual void step() = 0; /** Осуществляет перемещение объекта за один шаг эмуляции */
     virtual ~MapObject() = default;
 
 protected:
     evol::Vector position; /** Текущее положение объекта, 2D-координата */
-    double radius; /** Линейный размер объекта */
-    double angle; /** Направление движения объекта в радианах */
 
     int boundary_flag{0}; /** boundary flag = 0, если объект находится в пределах среды,
                             * 1 -- если за горизонтальной границей, -1 -- за вертикальной границей
@@ -38,7 +37,11 @@ protected:
     void setBoundaryFlag(evol::Vector curr_pos, evol::Vector tl_b, evol::Vector br_b); /** Расчитывает boundary_flag для текущего положения */
     void brownian_motion(); /** Осуществляет броуновское движение объекта */
 
-    char a[4]; /** Ничего не делает, для избегания ошибки padding_align */
+    char a[4]; /** Ничего не делает, для избегания warning'a padding_align */
+private:
+    double radius; /** Линейный размер объекта */
+    double angle; /** Направление движения объекта в радианах */
+
 };
 
 #endif // MAPOBJECT_H
