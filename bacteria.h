@@ -4,17 +4,27 @@
 #include "mapobject.h"
 #include "food.h"
 
+/**
+ * @brief Класс Bacteria -- объект на карте, способный активно двигаться и поглощать питательные вещества
+ */
 class Bacteria : public MapObject {
 public:
     Bacteria(evol::Vector position_, double radius_, double angle_, double velocity_);
-    bool canEat(Food& f);    void reflect(int b_f);           //b_f is for boundary_flag
-    void active_motion(evol::Vector tl, evol::Vector br);
-    void step() override;
-    double movement_value;
-    double first_bound_cross(evol::Vector br_b, evol::Vector tl_b);
+    double food_collected{0.0}; /** Собранные данной бактерией за  всю эмуляцию питательные вещества */
+    bool canEat(Food& f);  /** Проверяет, может ли бактерия съесть данный кусок пищи */
+    void step() override;  /** Реализует функцию движения, объединяющую реактивное и броуновское двиения */
+    double get_movement_value(); /** Рассчитывает длину шага */
+
+    static void bactest();
+
 private:
-    double velocity;
-    double food_collected{0.0};
+    double velocity; /** Скорость движения бактерии, влияет на длину шага */
+    double movement_value; /** Длина шага */
+
+    void reflect(int b_f); /** Изменяет направление движения при отражении от границ */
+    void active_motion(evol::Vector tl, evol::Vector br); /** Осуществляет активное движение в заданном направлении */
+    double first_bound_cross(evol::Vector br_b, evol::Vector tl_b); /** Определяет, какая граница была преодолена
+                                                                      * раньше при переходе за пределы среды                                                                      */
 };
 
 #endif // BACTERIA_H
